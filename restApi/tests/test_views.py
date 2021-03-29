@@ -40,6 +40,19 @@ class NetworkCaseTest(APITestCase):
 
     @mock.patch('restApi.views.basicParams_handler')
     @mock.patch("restApi.views.requests")
+    def test_weather_notAuth(self, mock_requests, mock_bpHandler):
+        # set return values of used mock attributes
+        mock_requests.get.return_value = mock_requests.response
+        mock_requests.response.json.return_value = self.test_data1
+        mock_bpHandler.return_value = {}
+
+        url = reverse('weather')
+        # call views.weather
+        response = self.client.get(url, params={}, format='json')
+        self.assertEqual(response.status_code, 401)
+
+    @mock.patch('restApi.views.basicParams_handler')
+    @mock.patch("restApi.views.requests")
     def test_forecast(self, mock_requests, mock_bpHandler):
         mock_requests.get.return_value = mock_requests.response
         mock_requests.response.json.return_value = self.test_data1
@@ -58,3 +71,14 @@ class NetworkCaseTest(APITestCase):
         # check that the views.weather calls mock_requests.response.json and sends returned data
         self.assertEqual(response.data, self.test_data1)
 
+    @mock.patch('restApi.views.basicParams_handler')
+    @mock.patch("restApi.views.requests")
+    def test_forecast_notAuth(self, mock_requests, mock_bpHandler):
+        mock_requests.get.return_value = mock_requests.response
+        mock_requests.response.json.return_value = self.test_data1
+        mock_bpHandler.return_value = {}
+
+        # call views.forecast
+        url = reverse('forecast')
+        response = self.client.get(url, params={}, format='json')
+        self.assertEqual(response.status_code, 401)
