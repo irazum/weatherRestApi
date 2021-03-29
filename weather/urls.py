@@ -20,7 +20,8 @@ from weather import views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', include('authApp.urls')),
     path('api/', include('restApi.urls')),
+    path('admin/', admin.site.urls),
     re_path(r"(?P<url>.*)", views.rest_urls, name="rest-urls"),
 ]

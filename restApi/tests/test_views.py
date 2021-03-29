@@ -3,20 +3,18 @@ from rest_framework.test import APITestCase
 from rest_framework.request import Request
 from unittest import mock
 
-from restApi.models import User
+from authApp.models import User
 
 
 class NetworkCaseTest(APITestCase):
     def setUp(self):
         self.test_data1 = {'main': 'some_data'}
-        self.password = '1234'
         self.user = User.objects.create_user(
             username='test',
-            password=self.password,
+            password='1234',
             email="test@email.com"
         )
         self.token = self.user.auth_token.key
-        self.headers = {"Authorization": f"Token {self.token}"}
 
     @mock.patch('restApi.views.basicParams_handler')
     @mock.patch("restApi.views.requests")
@@ -30,7 +28,7 @@ class NetworkCaseTest(APITestCase):
         # add auth header to request
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
         # call views.weather
-        response = self.client.get(url, params={}, headers=self.headers, format='json')
+        response = self.client.get(url, params={}, format='json')
 
         # check that the views.weather calls mock_bpHandler with Request instance obj
         self.assertTrue(isinstance(mock_bpHandler.call_args.args[0], Request))
@@ -60,10 +58,3 @@ class NetworkCaseTest(APITestCase):
         # check that the views.weather calls mock_requests.response.json and sends returned data
         self.assertEqual(response.data, self.test_data1)
 
-    def test_getToken(self):
-        data = {
-            "username": self.user.username,
-            "password": self.password
-        }
-        response = self.client.post('/api/get-token/', data=data, format='json')
-        self.assertEqual(response.data.get('token'), self.token)
