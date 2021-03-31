@@ -34,7 +34,7 @@ def weather(request):
         views_log.error(f"weather: {err}")
         return Response(problem_message_data, status=404)
     # auth problem handler
-    if r.status_code == 401:
+    if r.status_code == 401 or r.status_code == 429:
         views_log.error(f"weather: status_code 401, data: {r.json()}")
         return Response(problem_message_data, status=404)
 
@@ -60,7 +60,7 @@ def forecast(request):
         views_log.error(f"forecast: {err}")
         return Response(problem_message_data, status=404)
     # auth problem handler
-    if r.status_code == 401:
+    if r.status_code == 401 or r.status_code == 429:
         views_log.error(f"forecast: status_code 401, data: {r.json()}")
         return Response(problem_message_data, status=404)
 
