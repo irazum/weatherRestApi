@@ -10,13 +10,13 @@ class TestUtils(APITestCase):
 
     def test_bpHandler(self):
         # create request obj
-        params = {'city': 'Saint Petersburg', 'scale': 'imperial'}
+        params = {'city': 'Saint Petersburg', 'units': 'imperial'}
         request = self.factory.get('/api/weather', params)
 
         check_params = {
             'q': params['city'],
             'appid': openWeather_token,
-            'units': params['scale']
+            'units': params['units']
         }
 
         result = basicParams_handler(request)

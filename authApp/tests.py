@@ -28,10 +28,6 @@ class NetworkTestCase(APITestCase):
         self.assertEqual(response.data.get('token'), self.token)
 
     def test_register_token(self):
-        """
-        Добавить тестирование, что при корректных данных запроса нам возвращается токен
-        .., при некорректных данных status запроса
-        """
         response = self.client.post(self.register_url, self.register_data, format="json")
         self.assertTrue(response.status_code == 200 and response.data.get('token'))
 
